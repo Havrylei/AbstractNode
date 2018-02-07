@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Web.Mvc;
+using Ninject;
+using Ninject.Modules;
+using Ninject.Web.WebApi;
+using AbstractNode.BLL.Infrastructure;
+using AbstractNode.Web.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace AbstractNode.Web
 {
@@ -23,6 +23,11 @@ namespace AbstractNode.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            NinjectModule businessLogicModule = new BusinessLogicModule();
+            NinjectModule serviceModule = new ServiceModule("Data Source=IF979\\SQLEXPRESS;Integrated Security=True;Database=AbstractNode");
+            var kernel = new StandardKernel(businessLogicModule, serviceModule);
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+
             services.AddMvc();
         }
 

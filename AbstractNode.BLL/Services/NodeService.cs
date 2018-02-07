@@ -1,32 +1,42 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using AbstractNode.BLL.DTO;
 using AbstractNode.BLL.Interfaces;
+using AbstractNode.DAL.Entities;
 using AbstractNode.DAL.Interfaces;
 
 namespace AbstractNode.BLL.Services
 {
     public class NodeService : INodeService
     {
-        private readonly IUnitOfWork db;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public NodeService(IUnitOfWork unitOfWork)
+        public NodeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            db = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         public IEnumerable<NodeDto> GetAll()
         {
-            return null;
+            IEnumerable<Node> list = unitOfWork.Nodes.GetAll();
+            IEnumerable<NodeDto> result = mapper.Map<IEnumerable<NodeDto>>(list);
+
+            return result;
         }
 
         public NodeDto Get(int id)
         {
-            return null;
+            Node entity = unitOfWork.Nodes.Get(id);
+            NodeDto result = mapper.Map<NodeDto>(entity);
+
+            return result;
         }
 
         public void Dispose()
         {
-            db.Dispose();
+            unitOfWork.Dispose();
         }
     }
 }
