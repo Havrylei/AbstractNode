@@ -8,6 +8,9 @@ namespace AbstractNode.BLL.Interfaces
     {
         Task<IEnumerable<NodeDto>> GetAll();
         Task<NodeDto> Get(int id);
+        Task Create(NodeDto dto);
+        Task Update(NodeDto dto);
+        Task Delete(int id);
         void Dispose();
     }
 }

@@ -35,6 +35,27 @@ namespace AbstractNode.BLL.Services
             return result;
         }
 
+        public async Task Create(NodeDto dto)
+        {
+            Node result = mapper.Map<Node>(dto);
+
+            await unitOfWork.Nodes.Create(result);
+        }
+
+        public async Task Update(NodeDto dto)
+        {
+            Node result = mapper.Map<Node>(dto);
+
+            await unitOfWork.Nodes.Update(result);
+        }
+
+        public async Task Delete(int id)
+        {
+            Node result = await unitOfWork.Nodes.Get(id);
+
+            await unitOfWork.Nodes.Delete(result);
+        }
+
         public void Dispose()
         {
             unitOfWork.Dispose();

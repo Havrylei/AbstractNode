@@ -25,11 +25,29 @@ namespace AbstractNode.Web.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<NodeDto> Get(int id)
+        public async Task<NodeDto> Get([FromRoute] int id)
         {
             NodeDto entity = await service.Get(id);
 
             return entity;
+        }
+
+        [HttpPost]
+        public async Task Create([FromBody] NodeDto dto)
+        {
+            await service.Create(dto);
+        }
+
+        [HttpPatch]
+        public async Task Update([FromBody] NodeDto dto)
+        {
+            await service.Update(dto);
+        }
+
+        [HttpDelete]
+        public async Task Delete([FromRoute] int id)
+        {
+            await service.Delete(id);
         }
     }
 }

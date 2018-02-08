@@ -7,6 +7,7 @@ using AbstractNode.BLL.Interfaces;
 using AbstractNode.BLL.Services;
 using AbstractNode.DAL.Interfaces;
 using AbstractNode.DAL.Repositories;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AbstractNode.Web
 {
@@ -27,6 +28,11 @@ namespace AbstractNode.Web
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Account manager" });
+            });
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -35,6 +41,13 @@ namespace AbstractNode.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account manager V1");
+            });
 
             app.UseMvc();
         }

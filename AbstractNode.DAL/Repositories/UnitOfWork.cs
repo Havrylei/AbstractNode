@@ -34,11 +34,6 @@ namespace AbstractNode.DAL.Repositories
             }
         }
 
-        public async Task Save()
-        {
-            await db.SaveChangesAsync();
-        }
-
         public virtual void Dispose(bool disposing)
         {
             if(!disposed)

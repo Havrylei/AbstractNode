@@ -27,6 +27,25 @@ namespace AbstractNode.DAL.Repositories
         public async Task<Node> Get(int id)
         {
             return await db.Nodes.FindAsync(id);
-        }        
+        }
+
+        public async Task Create(Node entity)
+        {
+            await db.Nodes.AddAsync(entity);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task Update(Node entity)
+        {
+            db.Entry(entity).State = EntityState.Modified;
+
+            db.SaveChanges();
+        }
+
+        public async Task Delete(Node entity)
+        {
+            db.Nodes.Remove(entity);
+            await db.SaveChangesAsync();
+        }
     }
 }

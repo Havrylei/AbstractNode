@@ -8,5 +8,8 @@ namespace AbstractNode.DAL.Interfaces
     {
         Task<IEnumerable<Node>> GetAll();
         Task<Node> Get(int id);
+        Task Create(Node entity);
+        Task Update(Node entity);
+        Task Delete(Node entity);
     }
 }
