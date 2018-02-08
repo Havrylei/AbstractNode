@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AbstractNode.DAL.Infrastructure;
 using AbstractNode.DAL.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AbstractNode.DAL.Repositories
 {
@@ -33,9 +34,9 @@ namespace AbstractNode.DAL.Repositories
             }
         }
 
-        public void Save()
+        public async Task Save()
         {
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
         public virtual void Dispose(bool disposing)

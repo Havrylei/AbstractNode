@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using AbstractNode.BLL.DTO;
 using AbstractNode.BLL.Interfaces;
@@ -18,17 +19,17 @@ namespace AbstractNode.BLL.Services
             this.mapper = mapper;
         }
 
-        public IEnumerable<NodeDto> GetAll()
+        public async Task<IEnumerable<NodeDto>> GetAll()
         {
-            IEnumerable<Node> list = unitOfWork.Nodes.GetAll();
+            IEnumerable<Node> list = await unitOfWork.Nodes.GetAll();
             IEnumerable<NodeDto> result = mapper.Map<IEnumerable<NodeDto>>(list);
 
             return result;
         }
 
-        public NodeDto Get(int id)
+        public async Task<NodeDto> Get(int id)
         {
-            Node entity = unitOfWork.Nodes.Get(id);
+            Node entity = await unitOfWork.Nodes.Get(id);
             NodeDto result = mapper.Map<NodeDto>(entity);
 
             return result;

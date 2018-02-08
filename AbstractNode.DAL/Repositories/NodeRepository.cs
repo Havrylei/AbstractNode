@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 using AbstractNode.DAL.Entities;
 using AbstractNode.DAL.Infrastructure;
 using AbstractNode.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AbstractNode.DAL.Repositories
 {
@@ -14,14 +17,16 @@ namespace AbstractNode.DAL.Repositories
             db = context;
         }
 
-        public IEnumerable<Node> GetAll()
+        public async Task<IEnumerable<Node>> GetAll()
         {
-            return db.Nodes;
+            return await (from n in db.Nodes
+                            orderby n.ID descending                  
+                            select n).ToListAsync();
         }
 
-        public Node Get(int id)
+        public async Task<Node> Get(int id)
         {
-            return db.Nodes.Find(id);
+            return await db.Nodes.FindAsync(id);
         }        
     }
 }

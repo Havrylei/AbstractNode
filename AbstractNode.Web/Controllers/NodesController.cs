@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AbstractNode.BLL.DTO;
 using AbstractNode.BLL.Interfaces;
+using System.Threading.Tasks;
 
 namespace AbstractNode.Web.Controllers
 {
@@ -16,17 +17,17 @@ namespace AbstractNode.Web.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<NodeDto> Get()
+        public async Task<IEnumerable<NodeDto>> Get()
         {
-            IEnumerable<NodeDto> list = service.GetAll();
+            IEnumerable<NodeDto> list = await service.GetAll();
 
             return list;
         }
         
         [HttpGet("{id}")]
-        public NodeDto Get(int id)
+        public async Task<NodeDto> Get(int id)
         {
-            NodeDto entity = service.Get(id);
+            NodeDto entity = await service.Get(id);
 
             return entity;
         }

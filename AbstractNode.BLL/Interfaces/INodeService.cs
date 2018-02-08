@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AbstractNode.BLL.DTO;
 
 namespace AbstractNode.BLL.Interfaces
 {
     public interface INodeService
     {
-        IEnumerable<NodeDto> GetAll();
-        NodeDto Get(int id);
+        Task<IEnumerable<NodeDto>> GetAll();
+        Task<NodeDto> Get(int id);
         void Dispose();
     }
 }
