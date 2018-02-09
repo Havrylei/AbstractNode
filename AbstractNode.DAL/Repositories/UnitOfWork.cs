@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using AbstractNode.DAL.Infrastructure;
 using AbstractNode.DAL.Interfaces;
 
@@ -12,13 +10,9 @@ namespace AbstractNode.DAL.Repositories
         private bool disposed;
         private INodeRepository nodeRepository;
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(AbstractNodeContext dbContext)
         {
-            var builder = new DbContextOptionsBuilder<AbstractNodeContext>();
-
-            builder.UseSqlServer(connectionString);
-
-            db = new AbstractNodeContext(builder.Options);
+            db = dbContext;
         }
 
         public INodeRepository Nodes
@@ -36,14 +30,14 @@ namespace AbstractNode.DAL.Repositories
 
         public virtual void Dispose(bool disposing)
         {
-            if(!disposed)
+            if (!this.disposed)
             {
-                if(disposing)
+                if (disposing)
                 {
                     db.Dispose();
                 }
 
-                disposed = true;
+                this.disposed = true;
             }
         }
 

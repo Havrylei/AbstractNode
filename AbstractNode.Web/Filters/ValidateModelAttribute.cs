@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ClinicApi.Resources.Filters
+namespace AbstractNode.Web.Filters
 {
-    /// <summary>
-    ///     Validate Model Attribute
-    /// </summary>
     public class ValidateModelAttribute : ActionFilterAttribute
     {
-        /// <summary>
-        ///     On Action Executing
-        /// </summary>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.ModelState.IsValid)

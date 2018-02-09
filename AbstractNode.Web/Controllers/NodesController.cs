@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AbstractNode.BLL.DTO;
 using AbstractNode.BLL.Interfaces;
-using System.Threading.Tasks;
+using AbstractNode.Web.Filters;
 
 namespace AbstractNode.Web.Controllers
 {
     [Route("api/[controller]")]
+    [HandleExceptionFilter]
+    [ValidateModel]
     public class NodesController : Controller
     {
         private readonly INodeService service;
@@ -38,16 +41,22 @@ namespace AbstractNode.Web.Controllers
             await service.Create(dto);
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task Update([FromBody] NodeDto dto)
         {
             await service.Update(dto);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task Delete([FromRoute] int id)
         {
             await service.Delete(id);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            service.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using AbstractNode.DAL.Entities;
+﻿using AbstractNode.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AbstractNode.DAL.Infrastructure
@@ -8,7 +7,7 @@ namespace AbstractNode.DAL.Infrastructure
     {
         public DbSet<Node> Nodes { get; set; }
 
-        public AbstractNodeContext(DbContextOptions context) 
+        public AbstractNodeContext(DbContextOptions<AbstractNodeContext> context) 
             : base(context)
         {
 

@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Swagger;
 using AbstractNode.BLL.Infrastructure;
 using AbstractNode.BLL.Interfaces;
 using AbstractNode.BLL.Services;
 using AbstractNode.DAL.Interfaces;
 using AbstractNode.DAL.Repositories;
-using Swashbuckle.AspNetCore.Swagger;
+using AbstractNode.DAL.Infrastructure;
 
 namespace AbstractNode.Web
 {
@@ -22,13 +24,12 @@ namespace AbstractNode.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(Configuration.GetConnectionString("DBConnection"));
+            services.AddDbContext<AbstractNodeContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
             services.AddSingleton(MapperProfile.Instance);
-            services.AddSingleton<INodeService, NodeService>();
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<INodeService, NodeService>();
             services.AddMvc();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Account manager" });
