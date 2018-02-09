@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using AbstractNode.DAL.Entities;
@@ -10,42 +11,47 @@ namespace AbstractNode.DAL.Repositories
 {
     public class NodeRepository : INodeRepository
     {
-        private readonly AbstractNodeContext db;
+        private readonly AbstractNodeContext _context;
 
         public NodeRepository(AbstractNodeContext context)
         {
-            db = context;
+            _context = context
+                ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<IEnumerable<Node>> GetAll()
         {
-            return await (from n in db.Nodes
+            return await (from n in _context.Nodes
                             orderby n.ID descending                  
                             select n).ToListAsync();
         }
 
         public async Task<Node> Get(int id)
         {
-            return await db.Nodes.FindAsync(id);
+            Node result = await _context.Nodes.FindAsync(id);
+
+            _context.Entry(result).State = EntityState.Detached;
+
+            return result;
         }
 
         public async Task Create(Node entity)
         {
-            await db.Nodes.AddAsync(entity);
-            await db.SaveChangesAsync();
+            await _context.Nodes.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(Node entity)
         {
-            db.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entity).State = EntityState.Modified;
 
-            db.SaveChanges();
+            _context.SaveChanges();
         }
 
         public async Task Delete(Node entity)
         {
-            db.Nodes.Remove(entity);
-            await db.SaveChangesAsync();
+            _context.Nodes.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

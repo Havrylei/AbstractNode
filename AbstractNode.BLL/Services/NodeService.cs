@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using AbstractNode.BLL.DTO;
@@ -10,55 +11,57 @@ namespace AbstractNode.BLL.Services
 {
     public class NodeService : INodeService
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         public NodeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.unitOfWork = unitOfWork;
-            this.mapper = mapper;
+            _unitOfWork = unitOfWork
+                ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mapper = mapper
+                ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<IEnumerable<NodeDto>> GetAll()
         {
-            IEnumerable<Node> list = await unitOfWork.Nodes.GetAll();
-            IEnumerable<NodeDto> result = mapper.Map<IEnumerable<NodeDto>>(list);
+            IEnumerable<Node> result = await _unitOfWork.Nodes.GetAll();
+            IEnumerable<NodeDto> list = _mapper.Map<IEnumerable<NodeDto>>(result);
 
-            return result;
+            return list;
         }
 
         public async Task<NodeDto> Get(int id)
         {
-            Node entity = await unitOfWork.Nodes.Get(id);
-            NodeDto result = mapper.Map<NodeDto>(entity);
+            Node result = await _unitOfWork.Nodes.Get(id);
+            NodeDto dto = _mapper.Map<NodeDto>(result);
 
-            return result;
+            return dto;
         }
 
         public async Task Create(NodeDto dto)
         {
-            Node result = mapper.Map<Node>(dto);
+            Node entity = _mapper.Map<Node>(dto);
 
-            await unitOfWork.Nodes.Create(result);
+            await _unitOfWork.Nodes.Create(entity);
         }
 
         public async Task Update(NodeDto dto)
         {
-            Node result = mapper.Map<Node>(dto);
+            Node entity = _mapper.Map<Node>(dto);
 
-            await unitOfWork.Nodes.Update(result);
+            await _unitOfWork.Nodes.Update(entity);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(NodeDto dto)
         {
-            Node result = await unitOfWork.Nodes.Get(id);
+            Node entity = _mapper.Map<Node>(dto);
 
-            await unitOfWork.Nodes.Delete(result);
+            await _unitOfWork.Nodes.Delete(entity);
         }
 
         public void Dispose()
         {
-            unitOfWork.Dispose();
+            _unitOfWork.Dispose();
         }
     }
 }

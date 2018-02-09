@@ -10,7 +10,7 @@ namespace AbstractNode.BLL.Interfaces
         Task<NodeDto> Get(int id);
         Task Create(NodeDto dto);
         Task Update(NodeDto dto);
-        Task Delete(int id);
+        Task Delete(NodeDto dto);
         void Dispose();
     }
 }

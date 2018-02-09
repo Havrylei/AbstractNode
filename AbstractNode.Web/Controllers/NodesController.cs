@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AbstractNode.BLL.DTO;
@@ -12,50 +13,78 @@ namespace AbstractNode.Web.Controllers
     [ValidateModel]
     public class NodesController : Controller
     {
-        private readonly INodeService service;
+        private readonly INodeService _service;
 
         public NodesController(INodeService service)
         {
-            this.service = service;
+            _service = service 
+                ?? throw new ArgumentNullException(nameof(service));
         }
 
         [HttpGet]
-        public async Task<IEnumerable<NodeDto>> Get()
+        public async Task<IActionResult> Get()
         {
-            IEnumerable<NodeDto> list = await service.GetAll();
+            IEnumerable<NodeDto> result = await _service.GetAll();
 
-            return list;
+            return Ok(result);
         }
         
         [HttpGet("{id}")]
-        public async Task<NodeDto> Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            NodeDto entity = await service.Get(id);
+            NodeDto result = await _service.Get(id);
 
-            return entity;
+            if(result == null)
+            {
+                return BadRequest("Node not found.");
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task Create([FromBody] NodeDto dto)
+        public async Task<IActionResult> Create([FromBody] NodeDto dto)
         {
-            await service.Create(dto);
+            await _service.Create(dto);
+
+            return Ok();
         }
 
         [HttpPut]
-        public async Task Update([FromBody] NodeDto dto)
+        public async Task<IActionResult> Update([FromBody] NodeDto dto)
         {
-            await service.Update(dto);
+            NodeDto result = await _service.Get(dto.ID);
+
+            if (result == null)
+            {
+                return BadRequest("Node not found.");
+            }
+            
+            result = null;
+
+            await _service.Update(dto);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await service.Delete(id);
+            NodeDto result = await _service.Get(id);
+
+            if (result == null)
+            {
+                return BadRequest("Node not found.");
+            }
+
+            await _service.Delete(result);
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)
         {
-            service.Dispose();
+            _service.Dispose();
             base.Dispose(disposing);
         }
     }

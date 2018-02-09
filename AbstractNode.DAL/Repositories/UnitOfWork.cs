@@ -6,13 +6,14 @@ namespace AbstractNode.DAL.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly AbstractNodeContext db;
+        private readonly AbstractNodeContext _context;
         private bool disposed;
         private INodeRepository nodeRepository;
 
-        public UnitOfWork(AbstractNodeContext dbContext)
+        public UnitOfWork(AbstractNodeContext context)
         {
-            db = dbContext;
+            _context = context
+                ?? throw new ArgumentNullException(nameof(context));
         }
 
         public INodeRepository Nodes
@@ -21,7 +22,7 @@ namespace AbstractNode.DAL.Repositories
             {
                 if (nodeRepository == null)
                 {
-                    nodeRepository = new NodeRepository(db);
+                    nodeRepository = new NodeRepository(_context);
                 }
 
                 return nodeRepository;
@@ -30,14 +31,14 @@ namespace AbstractNode.DAL.Repositories
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    _context.Dispose();
                 }
 
-                this.disposed = true;
+                disposed = true;
             }
         }
 
